@@ -11,9 +11,9 @@ $(document).ready(function () {
             { code: "PE", name: "Prince Edward Island" },
             { code: "QC", name: "Quebec" },
             { code: "SK", name: "Saskatchewan" },
-            { code: "NT", name: "Northwest Territories"}, 
-            { code: "YT", name: "Yukon"},
-            { code: "NU", name: "Nunavut"}    
+            { code: "NT", name: "Northwest Territories" },
+            { code: "YT", name: "Yukon" },
+            { code: "NU", name: "Nunavut" }
         ],
         USA: [
             { code: "AL", name: "Alabama" },
@@ -74,12 +74,12 @@ $(document).ready(function () {
         // dynamically shows provinces/states based on which country is selected
         const country = $(this).val();
         const provinceDropdown = $("#province");
-        
+
         provinceDropdown.empty().append('<option value="">Select Province/State</option>');
         regions[country].forEach(region => {
             provinceDropdown.append($('<option></option>').attr('value', region.code).text(region.name));
         });
-        
+
     });
 
     $("#registrationForm").submit(function (event) {
@@ -87,18 +87,69 @@ $(document).ready(function () {
         let valid = true;
 
         // possible additional validations can be added here
+        const firstName = $('#firstName').val().trim();
+        const lastName = $('#lastName').val().trim();
+        const email = $('#email').val().trim();
+        const password = $('#password').val().trim();
+        const phoneNumber = $('#phoneNumber').val().trim();
+        const address = $('#address').val().trim();
+        const city = $('#city').val().trim();
+        const province = $('#province').val();
+        const country = $('#country').val();
+
+        if (firstName.length === 0 || firstName.length > 255) {
+            valid = false;
+            alert("First Name must be between 1 and 255 characters.");
+            $("#formMessage").html("<span class='text-danger'>An error occurred. Please try again.</span>");
+            return;
+        }
+
+        if (lastName.length === 0 || lastName.length > 255) {
+            valid = false;
+            alert("Last Name must be between 1 and 255 characters.");
+            $("#formMessage").html("<span class='text-danger'>An error occurred. Please try again.</span>");
+            return;
+        }
+
+        if (password.length === 0) {
+            valid = false;
+            alert("Password cannot be empty.");
+            $("#formMessage").html("<span class='text-danger'>An error occurred. Please try again.</span>");
+            return;
+        }
+
+        if (address.length === 0 || address.length > 255) {
+            valid = false;
+            alert("Address must be between 1 and 255 characters.");
+            $("#formMessage").html("<span class='text-danger'>An error occurred. Please try again.</span>");
+            return;
+        }
+
+        if (city.length === 0 || city.length > 255) {
+            valid = false;
+            alert("City must be between 1 and 255 characters.");
+            $("#formMessage").html("<span class='text-danger'>An error occurred. Please try again.</span>");
+            return;
+        }
+
+        if (country !== "Canada" && country !== "USA") {
+            valid = false;
+            alert("Please select a valid country.");
+            $("#formMessage").html("<span class='text-danger'>An error occurred. Please try again.</span>");
+            return;
+        }
 
         // collect form data
         const formData = {
-            firstName: $('#firstName').val(),
-            lastName: $('#lastName').val(),
-            email: $('#email').val(),
-            password: $('#password').val(),
-            phoneNumber: $('#phoneNumber').val(),
-            address: $('#address').val(),
-            city: $('#city').val(),
-            province: $('#province').val(),
-            country: $('#country').val()
+            firstName: firstName,
+            lastName: lastName,
+            email: email,
+            password: password,
+            phoneNumber: phoneNumber,
+            address: address,
+            city: city,
+            province: province,
+            country: country
         };
 
         // sends it to backend via POST request to /register
